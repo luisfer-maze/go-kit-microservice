@@ -1,0 +1,1 @@
+protoc --go_out=./ --go_opt=module=github.com/luisfer-maze/go-kit-microservice/model --go-grpc_out=. --go-grpc_opt=module=github.com/luisfer-maze/go-kit-microservice/model --go-grpc_opt=require_unimplemented_servers=false ./*.proto

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/luisfer-maze/go-kit-microservice/model";
+
+message HelloRequest {
+  string name_to_salute = 1;
+}
+
+message HelloResponse {
+  string salute = 1;
+}
+
+service HelloService {
+  rpc SayHello(HelloRequest) returns (HelloResponse);
+}
