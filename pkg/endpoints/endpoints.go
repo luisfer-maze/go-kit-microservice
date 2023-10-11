@@ -15,7 +15,7 @@ type Endpoints struct {
 
 func MakeEndpoints(logger log.Logger, service service.Service) Endpoints {
 	return Endpoints{
-		SayHello: makeEndpointWithMiddleware(makeSayHelloEndpoint(service), logger),
+		SayHello: makeEndpointWithMiddleware(makeSayHelloEndpoint(service), logger, "SayHello"),
 	}
 }
 
@@ -29,7 +29,8 @@ func makeSayHelloEndpoint(service service.Service) endpoint.Endpoint {
 	}
 }
 
-func makeEndpointWithMiddleware(e endpoint.Endpoint, logger log.Logger) endpoint.Endpoint {
+func makeEndpointWithMiddleware(e endpoint.Endpoint, logger log.Logger, method string) endpoint.Endpoint {
 	modEndpoint := e
+	modEndpoint = metricsMiddleware(method)(modEndpoint)
 	return loggingMiddleware(logger)(modEndpoint)
 }
