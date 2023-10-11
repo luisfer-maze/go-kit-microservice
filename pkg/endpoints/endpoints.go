@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-kit/kit/endpoint"
+	"github.com/go-kit/log"
 	"github.com/luisfer-maze/go-kit-microservice/model"
 	"github.com/luisfer-maze/go-kit-microservice/pkg/service"
 )
@@ -12,9 +13,9 @@ type Endpoints struct {
 	SayHello endpoint.Endpoint
 }
 
-func MakeEndpoints(service service.Service) Endpoints {
+func MakeEndpoints(logger log.Logger, service service.Service) Endpoints {
 	return Endpoints{
-		SayHello: makeSayHelloEndpoint(service),
+		SayHello: makeEndpointWithMiddleware(makeSayHelloEndpoint(service), logger),
 	}
 }
 
@@ -26,4 +27,9 @@ func makeSayHelloEndpoint(service service.Service) endpoint.Endpoint {
 			Salute: salute,
 		}, nil
 	}
+}
+
+func makeEndpointWithMiddleware(e endpoint.Endpoint, logger log.Logger) endpoint.Endpoint {
+	modEndpoint := e
+	return loggingMiddleware(logger)(modEndpoint)
 }
