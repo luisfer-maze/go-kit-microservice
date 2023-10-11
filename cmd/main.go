@@ -28,7 +28,7 @@ func main() {
 	//saver := storage.NewSaluteSaver(logger)
 	saver := storage.NewAnotherStorage(logger)
 	svc := service.NewService(saver, logger)
-	end := endpoints.MakeEndpoints(svc)
+	end := endpoints.MakeEndpoints(logger, svc)
 	grpcServer := transport.NewGRPCServer(end)
 
 	cancelInterrupt := make(chan struct{})
@@ -43,7 +43,7 @@ func main() {
 		baseServer := grpc.NewServer()
 
 		g.Add(func() error {
-			level.Info(logger).Log("msg", "starting metrics server")
+			level.Info(logger).Log("msg", "starting grpc server")
 			model.RegisterHelloServiceServer(baseServer, grpcServer)
 
 			return baseServer.Serve(grpcListener)
